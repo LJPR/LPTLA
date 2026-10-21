@@ -27,7 +27,7 @@ jobs:
     steps:
         - uses: actions/checkout@v4
         - uses: actions/setup-dotnet@v4
-            with:
+          with:
                 dotnet-version: '8.0.x'
         # - uses: actions/cache@v4
         #     with:
@@ -47,14 +47,14 @@ jobs:
             - uses: actions/checkout@v4
             - uses: docker/setup-buildx-action@v3
             - uses: docker/build-push-action@v6
-                with:
+              with:
                     context: .
                     tags: ${{env.IMAGE_NAME}}:${{ github.sha }}
                     load: true
                     # cache-from: type=gha
                     # cache-to: type=gha,mode=max
             - uses: aquasecurity/trivy-action@master
-                with:
+              with:
                     image-ref: '${{env.IMAGE_NAME}}:${{ github.sha }}
                     severity: 'HIGH,CRITICAL'
                     ignore-unfixed: true
