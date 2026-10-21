@@ -26,10 +26,10 @@ jobs:
           - uses: actions/setup-dotnet@v4
             with:
                   dotnet-version: '8.0.x'
-          # - uses: actions/cache@v4
-          #     with:
-          #         path: ~/.nuget/packages
-          #        key: nuget-${{ hashFiles('**/*.csproj')}}
+          - uses: actions/cache@v4
+            with:
+                 path: ~/.nuget/packages
+                 key: nuget-${{ hashFiles('**/*.csproj')}}
           - run: cd OSV
           - run: dotnet format --verify-no-changes
           - run: dotnet build -c Release
@@ -48,8 +48,8 @@ jobs:
                     context: .
                     tags: ${{env.IMAGE_NAME}}:${{ github.sha }} ##nb github.sha context not env
                     load: true
-                    # cache-from: type=gha
-                    # cache-to: type=gha,mode=max
+                    cache-from: type=gha
+                    cache-to: type=gha,mode=max
             - uses: aquasecurity/trivy-action@master
               with:
                     image-ref: '${{env.IMAGE_NAME}}:${{ github.sha }}'
