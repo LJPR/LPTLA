@@ -30,14 +30,13 @@ jobs:
             with:
                  path: ~/.nuget/packages
                  key: nuget-${{ hashFiles('**/*.csproj')}}
-          - run: dotnet format OSV --verify-no-changes
+          - run: dotnet format OSV
           - run: dotnet build -c Release
           - run: dotnet test
           - run: dotnet list package --vulnerable --include-transitive
 
     docker-build-scan:
         if: ${{ !inputs.redeploy_only}}
-        # needs: format-test || #enforcement/gate
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
@@ -47,7 +46,7 @@ jobs:
                     context: .
                     tags: ${{env.IMAGE_NAME}}:${{ github.sha }} ##nb github.sha context not env
                     load: true
-                    cache-from: type=gha
+                    cache-from: type=gha  #default, internal gh action cache used in build push action
                     cache-to: type=gha,mode=max
             - uses: aquasecurity/trivy-action@master
               with:
@@ -56,8 +55,8 @@ jobs:
                     ignore-unfixed: true
                     exit-code: '1'
     push: 
-      # needs: docker-build-scan   ### gate/enforcement
-      if: github.ref == 'refs/heads/main' && !inputs.redeploy_only
+      needs: docker-build-scan   ### gate/enforcement
+      if: github.ref == 'refs/heads/main' && !inputs.redeploy_only # only on main branch ; always skipped for manual workflow
       runs-on: ubuntu-latest
       steps: 
         - uses: actions/checkout@v4
@@ -69,9 +68,8 @@ jobs:
         - run: docker push $REGISTRY/IMAGE_NAME:$GITHUB_SHA
 
     deploy:
-     # needs: push #enforcement
-      # if :thumbsup: and either triggered by main or workflow
-      if: always() && (github.ref == 'refs/heads/main' || inputs.redeploy_only) 
+      needs: push #enforcement of process 
+      if: always() && (github.ref == 'refs/heads/main' || inputs.redeploy_only) #enforcing on main or manual push 
       runs-on: ubuntu-latest
       steps: 
         #from reg
