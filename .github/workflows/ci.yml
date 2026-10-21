@@ -23,7 +23,7 @@ jobs:
       runs-on: ubuntu-latest
       defaults:
         run:
-          working-directory: ./OSV\s
+          working-directory: /OSV
       steps:
           - uses: actions/checkout@v4
           - uses: actions/setup-dotnet@v4
