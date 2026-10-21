@@ -21,6 +21,9 @@ jobs:
     format-test:
       if: ${{ !inputs.redeploy_only}} #negation for single val in ctxt 
       runs-on: ubuntu-latest
+      defaults:
+        run:
+          working-directory: ./OSV
       steps:
           - uses: actions/checkout@v4
           - uses: actions/setup-dotnet@v4
@@ -29,7 +32,7 @@ jobs:
           # - uses: actions/cache@v4
           #     with:
           #         path: ~/.nuget/packages
-          #         key: nuget-${{ hashFiles('**/*.csproj')}}
+          #        key: nuget-${{ hashFiles('**/*.csproj')}}
           - run: dotnet format --verify-no-changes
           - run: dotnet build -c Release
           - run: dotnet test
