@@ -30,8 +30,7 @@ jobs:
             with:
                  path: ~/.nuget/packages
                  key: nuget-${{ hashFiles('**/*.csproj')}}
-          - run: pwd
-                 ls
+          - run: ls
           - run: dotnet format --verify-no-changes
           - run: dotnet build -c Release
           - run: dotnet test
