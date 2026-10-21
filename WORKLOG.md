@@ -26,14 +26,14 @@
     1. Ran `dotnet list package...`, added NewtonSoft 9 and reran to confirm. High Severity shows.
     2. Writing dockerfile:
         - COPY changed to explicit OrderService/Ordrservice.csproj from wildcard since my folder structure has an extra step of depth
-        - Started receiving errors on build, had to `dotnet clean OrderService` to resolve.
-        - With build resolved, publish now gives error: `
+        - Publish step gives error on duplicate global attrib. After some reading, resolved by setting `GenerateTargetFrameworkAttribute` to `false` in `OrderService.csproj`.
+    3. Scanned with trivy. There were many OS findings.
+        - added 13.01 to repair, confirmed resolved (the app level)
+        - confirmed running as appuser
 
 > Why do we care if the container runs as root, and what did you have to change to make USER appuser actually work?
 
 Running as a user whenever possible is a foundational security control throughout modern computing. A container running as root opens up greater risk of privilege escalation and similar security concerns, and that significantly compromises one of the major benefits of containers: isolation.
-
-Dockerfile reference states: if there is no usergroup associated  with the user, runner defaults to root. Used the -U flag on adduser.
 
 ***
 
