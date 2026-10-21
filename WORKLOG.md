@@ -38,8 +38,8 @@ Running as a user whenever possible is a foundational security control throughou
 ***
 
 ## 3 - GH Actions
-
-
+    1. I foolishly did not read all of the *code* included, so I spent longer than I ought considering superlinter, etc. before seeing the example using only dotnet tools.
+    2. I should have taken a break sooner when troubleshooting format-test. Originally thought it was a syntax issue but couldn't resolve; then thought $PATH var may resolve it, but I verified the path on the runner and redirecting locally with the dotnet command was not working either. Stepping away and returning to figure it out locally first, it was, in fact, a syntax error with the dotnet CLI.
 ***
 
 ## 4 - Deploy
@@ -54,15 +54,15 @@ Docker run without restart policy or health based rollback means no automatic or
 
 > Format check, test, security scan -- if all three could run in parallel instead of sequentially, would you? What do you gain, what do you risk?
 
-For those three, I would not. In the absence of compute costs, it saves time and I would assume is the preferred dev experience.
+For all three, I would not. You would gain speed of iteration, with major tradeoffs
 
-However, any fail not only means you need to rerun three tasks instead of one, it also introduces the potential for someone to think "it already passed the security scan, I only changed the formatting..." The potential for human error, even for people who know should better, cannot be overlooked.
+But testing and security scanning together means a failure introduces the potential for someone to think "it already passed the security scan, I only changed the formatting..." The potential for human error, even for people who know should better, cannot be overlooked.
 
-Additionally, running them together (and therefore presumable having a single, simultaneous enforcement point) can cloud the source of an issue in a published artifact, when walking back through the process after a failure. Three separate gates means three smaller pieces of pipeline you can potentially narrow your troubleshooting scope to.
+Additionally, separating them all can be clearer when walking back through the process after an issue: three smaller pieces of pipeline you can potentially narrow your troubleshooting scope to.
 
 > Where do secrets live in your pipeline? What's the blast radius if one leaks into a log line?
 
-(I had to look this one up)
+Secrets live in
 
 > Your Trivy gate uses `--ignore-unfixed`. A base-image CVE that had no fix gets one next month. Nothing in your pipeline catches that automatically. What's the gap, how do you close it?
 
