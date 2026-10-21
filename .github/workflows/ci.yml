@@ -1,0 +1,62 @@
+name: CI
+
+on:
+
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  workflow_dispatch:
+    inputs:
+        redeploy_only:
+            description: 'skip build, redeploy last image'
+            type: boolean
+            default: false
+
+env:
+
+    IMAGE NAME: orderservice
+    REGISTRY: ghcr.io/ljprr
+
+
+jobs:
+    format-test:
+    if: ${{ !inputs.redeploy_only}}
+    runs-on: ubuntu-latest
+    steps:
+        - uses: actions/checkout@v4
+        - uses: actions/setup-dotnet@v4
+            with:
+                dotnet-version: '8.0.x'
+        # - uses: actions/cache@v4
+        #     with:
+        #         path: ~/.nuget/packages
+        #         key: nuget-${{ hashFiles('**/*.csproj')}}
+        - run: dotnet format --verify-no-changes
+        - run: dotnet build -c Release
+        - run: dotnet test
+        - run: dotnet list package --vulnerable --include-transitive
+
+    docker-build-scan:
+        if: ${{ !inputs.redeploy_only}}
+        # a gate!
+        needs: format-test
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: docker/setup-buildx-action@v3
+            - uses: docker/build-push-action@v6
+                with:
+                    context: .
+                    tags: ${{env.IMAGE_NAME}}:${{ github.sha }}
+                    load: true
+                    # cache-from: type=gha
+                    # cache-to: type=gha,mode=max
+            - uses: aquasecurity/trivy-action@master
+                with:
+                    image-ref: '${{env.IMAGE_NAME}}:${{ github.sha }}
+                    severity: 'HIGH,CRITICAL'
+                    ignore-unfixed: true
+                    exit-code: '1'
+
