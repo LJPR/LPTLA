@@ -30,7 +30,7 @@ jobs:
             with:
                  path: ~/.nuget/packages
                  key: nuget-${{ hashFiles('**/*.csproj')}}
-          - run: dotnet format --verify-no-changes ./OSV
+          - run: dotnet format OSV --verify-no-changes
           - run: dotnet build -c Release
           - run: dotnet test
           - run: dotnet list package --vulnerable --include-transitive
