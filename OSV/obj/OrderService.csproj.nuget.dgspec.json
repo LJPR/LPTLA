@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/ljpr/proj/LPTLA/OrderService/OrderService.csproj": {}
+    "/home/ljpr/proj/LPTLA/OSV/OrderService.csproj": {}
   },
   "projects": {
-    "/home/ljpr/proj/LPTLA/OrderService/OrderService.csproj": {
+    "/home/ljpr/proj/LPTLA/OSV/OrderService.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/ljpr/proj/LPTLA/OrderService/OrderService.csproj",
+        "projectUniqueName": "/home/ljpr/proj/LPTLA/OSV/OrderService.csproj",
         "projectName": "OrderService",
-        "projectPath": "/home/ljpr/proj/LPTLA/OrderService/OrderService.csproj",
+        "projectPath": "/home/ljpr/proj/LPTLA/OSV/OrderService.csproj",
         "packagesPath": "/home/ljpr/.nuget/packages/",
-        "outputPath": "/home/ljpr/proj/LPTLA/OrderService/obj/",
+        "outputPath": "/home/ljpr/proj/LPTLA/OSV/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/ljpr/.nuget/NuGet/NuGet.Config"
@@ -49,7 +49,7 @@
             },
             "Newtonsoft.Json": {
               "target": "Package",
-              "version": "[9.0.1, )"
+              "version": "[13.0.1, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
